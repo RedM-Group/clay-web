@@ -1,3 +1,5 @@
+import { createUuid } from "./id";
+
 export async function compressImage(file: File, maxDimension = 1800): Promise<File> {
   const bitmap = await createImageBitmap(file);
   const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
@@ -9,9 +11,9 @@ export async function compressImage(file: File, maxDimension = 1800): Promise<Fi
     canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Photo processing failed")), "image/jpeg", 0.82),
   );
   bitmap.close();
-  return new File([blob], `${crypto.randomUUID()}.jpg`, { type: "image/jpeg" });
+  return new File([blob], `${createUuid()}.jpg`, { type: "image/jpeg" });
 }
 
 export function selectPhotos(files: FileList | null) {
-  return Array.from(files ?? []).map((file) => ({ id: crypto.randomUUID(), file, preview: URL.createObjectURL(file) }));
+  return Array.from(files ?? []).map((file) => ({ id: createUuid(), file, preview: URL.createObjectURL(file) }));
 }
