@@ -7,13 +7,13 @@
 1. Create a [Supabase](https://supabase.com) project.
 2. In Supabase SQL Editor, run the files in `supabase/migrations/` in numeric order (`001` through `007`). Paste the SQL contents into the editor—not the filename—and run each migration once. These create the tables, indexes, Row Level Security policies, private media bucket, offline/task/drive support, and the expanded Research File.
 3. In **Authentication → Providers → Email**, keep email confirmation enabled and disable **Allow new users to sign up**. Clay is invite-only; add users through **Authentication → Users → Invite user**.
-4. Create a Mapbox account and a public token with Styles and Geocoding access.
+4. Create a HERE Platform account, create an app, and generate an API key with Maps API for JavaScript and Geocoding & Search access.
 5. Copy `.env.example` to `.env.local` and fill in:
 
    ```env
    NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
-   NEXT_PUBLIC_MAPBOX_TOKEN=YOUR_PUBLIC_MAPBOX_TOKEN
+   NEXT_PUBLIC_HERE_API_KEY=YOUR_HERE_API_KEY
    ```
 
 Never place a Supabase service-role key in a `NEXT_PUBLIC_` variable.

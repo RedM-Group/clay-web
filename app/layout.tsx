@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import "mapbox-gl/dist/mapbox-gl.css";
+import "leaflet/dist/leaflet.css";
 
 export const metadata: Metadata = {
   title: { default: "clay", template: "%s · clay" },
-  description: "Capture today. Close tomorrow. A mobile field app for off-market real estate scouting.",
+  description: "Turn every drive into your next deal. Capture properties, research ownership, map routes, and manage your off-market real estate pipeline with Clay.",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "clay", statusBarStyle: "black-translucent" },
   icons: { icon: "/icon.svg", apple: "/icon.svg" },

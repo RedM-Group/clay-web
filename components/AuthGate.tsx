@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase, isConfigured } from "@/lib/supabase";
 import { Check, LoaderCircle, Mail } from "./icons";
+import { LandingPage } from "./LandingPage";
 
 const passwordRule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$/;
 export const passwordHelp = "Use at least 12 characters with uppercase, lowercase, a number, and a symbol.";
@@ -14,6 +15,7 @@ export function AuthGate({ children }: { children: (session: Session) => React.R
   const [flow, setFlow] = useState<"login"|"forgot"|"magic"|"recovery">("login");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showAuth, setShowAuth] = useState(false);
   useEffect(() => {
     if (!isConfigured) return;
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); setLoading(false); });
@@ -26,5 +28,6 @@ export function AuthGate({ children }: { children: (session: Session) => React.R
   if (loading) return <div className="auth"><LoaderCircle className="spin" size={32}/></div>;
   if (!isConfigured) return <div className="auth"><div className="authbox"><div className="authbrand">clay</div><p className="tagline">Capture today.<br/>Close tomorrow.</p><div className="card warn"><b>Connect Supabase to begin</b><p className="muted small">Add your Supabase settings to .env.local, then restart Clay.</p></div></div></div>;
   if (session && flow!=="recovery") return <>{children(session)}</>;
+  if (!showAuth&&flow==="login") return <LandingPage onSignIn={()=>setShowAuth(true)}/>;
   return <div className="auth"><div className="authbox"><div className="authbrand">clay</div><p className="tagline">Capture today.<br/>Close tomorrow.</p>{flow==="login"?<form className="form" onSubmit={login}><div className="field"><label>Email</label><input className="input" name="email" type="email" autoComplete="email" required/></div><div className="field"><label>Password</label><input className="input" name="password" type="password" autoComplete="current-password" required/></div>{error&&<div className="card error small">{error}</div>}<button className="primary">Sign in</button><div className="row spread"><button type="button" className="link" onClick={()=>setFlow("forgot")}>Forgot password?</button><button type="button" className="link" onClick={()=>setFlow("magic")}>Email me a sign-in link</button></div><div className="card small"><b>Clay is invite only</b><p className="muted" style={{marginBottom:0}}>Ask an administrator to invite your email address.</p></div></form>:flow==="recovery"?<form className="form" onSubmit={resetPassword}><h2>Choose a new password</h2><div className="field"><label>New password</label><input className="input" name="password" type="password" autoComplete="new-password" required/></div><div className="field"><label>Confirm password</label><input className="input" name="confirm" type="password" autoComplete="new-password" required/></div><p className="small muted">{passwordHelp}</p>{error&&<div className="card error small">{error}</div>}<button className="primary">Update password</button></form>:<form className="form" onSubmit={emailAction}><div className="successmark" style={{marginBottom:4}}><Mail/></div><h2>{flow==="forgot"?"Reset your password":"Passwordless sign in"}</h2><p className="muted">{flow==="forgot"?"We’ll email a secure reset link.":"We’ll email a one-time sign-in link. Only invited users can sign in."}</p><div className="field"><label>Email</label><input className="input" name="email" type="email" autoComplete="email" required/></div>{message&&<div className="card location"><Check/>{message}</div>}{error&&<div className="card error small">{error}</div>}<button className="primary">Send email</button><button type="button" className="secondary" onClick={()=>{setFlow("login");setMessage("");setError("")}}>Back to sign in</button></form>}</div></div>;
 }
