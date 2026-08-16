@@ -37,9 +37,13 @@ npm run typecheck
 npm run build
 ```
 
-## Deploy to Vercel
+## Deployment
 
-Import the repository in Vercel, add the three environment variables above in Project Settings → Environment Variables, and deploy with the Next.js preset. Add the Vercel production URL to Supabase Authentication → URL Configuration.
+Deploy Clay to a host that supports full-stack Next.js applications and server API routes. Configure the public Supabase and HERE variables plus the server-only Supabase service-role and Resend variables in the host's environment settings. Never expose server-only keys through a `NEXT_PUBLIC_` variable.
+
+After deployment, add the production URL to Supabase **Authentication → URL Configuration** as the Site URL and an allowed Redirect URL. If the HERE key has website restrictions, also add the production hostname there.
+
+The optional `CLAY_EMAIL_TEST_RECIPIENT` should only be configured during Resend sandbox testing. Leave it unset in production so verification codes go to the signed-in user's email.
 
 ## Install on iPhone
 
